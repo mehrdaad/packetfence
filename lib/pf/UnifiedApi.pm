@@ -71,8 +71,8 @@ our @API_V1_ROUTES = (
         id_key     => 'connection_profile_id',
         path       => '/config/connection_profiles'
     },
-    { controller => 'node', collection_v2a => { get => 'latest_locationlog_by_mac' }, resource_v2a => {}, path => '/node/:mac/latest_locationlog' },
-    { controller => 'node', collection_v2a => { get => 'locationlog_by_mac' }, resource_v2a => {}, path => '/node/:mac/locationlog' },
+    { controller => 'nodes', collection_v2a => { get => 'latest_locationlog_by_mac' }, resource_v2a => {}, path => '/nodes/:mac/latest_locationlog' },
+    { controller => 'nodes', collection_v2a => { get => 'locationlog_by_mac' }, resource_v2a => {}, path => '/nodes/:mac/locationlog' },
 );
 
 sub startup {
