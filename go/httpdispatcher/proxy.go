@@ -98,11 +98,11 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !(passThrough.checkProxyPassthrough(ctx, host) || ((passThrough.checkDetectionMechanisms(ctx, fqdn.String()) || passThrough.URIException.MatchString(r.RequestURI)) && passThrough.DetectionMecanismBypass)) {
-		if r.Method != "GET" {
-			log.LoggerWContext(ctx).Debug(fmt.Sprintln(host, "FORBIDDEN"))
-			w.WriteHeader(http.StatusNotImplemented)
-			return
-		}
+		// if r.Method != "GET" {
+		// 	log.LoggerWContext(ctx).Debug(fmt.Sprintln(host, "FORBIDDEN"))
+		// 	w.WriteHeader(http.StatusNotImplemented)
+		// 	return
+		// }
 
 		if (passThrough.checkDetectionMechanisms(ctx, fqdn.String()) || passThrough.URIException.MatchString(r.RequestURI)) && passThrough.SecureRedirect {
 			passThrough.PortalURL.Scheme = "http"
@@ -112,6 +112,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Location", passThrough.PortalURL.String())
 		w.WriteHeader(http.StatusFound)
 		t := template.New("foo")
+
 		t, _ = t.Parse(`
 <html>
 <head><title>302 Moved Temporarily</title></head>
@@ -134,7 +135,6 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	</body>
 </html>`)
 		t.Execute(w, passThrough)
-
 		log.LoggerWContext(ctx).Debug(fmt.Sprintln(host, "REDIRECT"))
 		return
 	}
@@ -167,8 +167,9 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Pass the context in the request
 	r = r.WithContext(ctx)
-	rp.ServeHTTP(w, r)
 	log.LoggerWContext(ctx).Info(fmt.Sprintln(host, time.Since(t)))
+	rp.ServeHTTP(w, r)
+
 }
 
 // Configure add default target in the deny list
